@@ -1,30 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#423752"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_horizontal_ntb"
+    <com.joanzapata.iconify.widget.IconTextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="100dp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:text="{fa-compass 80sp}"/>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="Sign In"
+            android:textColor="#FFFFFF" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_toLeftOf="@id/tvText"
+            android:background="@color/colorPrimary" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_toRightOf="@id/tvText"
+            android:background="@color/colorPrimary" />
 
-    <devlight.io.library.ntb.NavigationTabBar
-        android:id="@+id/ntb_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:ntb_badge_gravity="top"
-        app:ntb_badge_position="right"
-        app:ntb_badged="true"
-        app:ntb_scaled="true"
-        app:ntb_tinted="true"
-        app:ntb_title_mode="all"
-        app:ntb_titled="true"
-        app:ntb_swiped="true"/>
+    </RelativeLayout>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/fb_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp" />
+
 
 </LinearLayout>

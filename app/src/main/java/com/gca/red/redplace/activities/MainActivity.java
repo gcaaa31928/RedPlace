@@ -1,59 +1,40 @@
-package com.gca.red.redplace;
+package com.gca.red.redplace.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.gca.red.redplace.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import devlight.io.library.ntb.NavigationTabBar;
 
-import static android.Manifest.permission.READ_CONTACTS;
+public class MainActivity extends AppCompatActivity {
 
-/**
- * A login screen that offers login via email/password.
- */
-public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        initUI();
+        setContentView(R.layout.activity_main);
+        initNavigationTabBar();
     }
 
-    private void initUI() {
+
+
+    private void initNavigationTabBar() {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
         viewPager.setAdapter(new PagerAdapter() {
             @Override
@@ -73,15 +54,10 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
-//                final View view = LayoutInflater.from(
-//                        getBaseContext()).inflate(R.layout.item_vp, null, false);
-//
-//                final TextView txtPage = (TextView) view.findViewById(R.id.txt_vp_item_page);
-//                txtPage.setText(String.format("Page #%d", position));
-//
-//                container.addView(view);
-//                return view;
-                return null;
+                final View view = LayoutInflater.from(
+                        getBaseContext()).inflate(R.layout.activity_login, null, false);
+                container.addView(view);
+                return view;
             }
         });
 

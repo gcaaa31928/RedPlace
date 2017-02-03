@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "903969416332",
+    "project_id": "firebase-redplace"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903969416332:android:d05e05e5a28cefdd",
+        "android_client_info": {
+          "package_name": "com.gca.red.redplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903969416332-8vqkn4ba6c6cgji4q1m6ek2v8sllb88g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjCwqFn4r90ZePVaTXVPR3wGRgEFA48oQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
