@@ -1,6 +1,7 @@
 package com.gca.red.redplace.activities;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -8,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.gca.red.redplace.Manifest;
+import android.Manifest;
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.adapters.PageAdapter;
 import com.gca.red.redplace.fragments.MapFragment;
@@ -20,11 +21,9 @@ import devlight.io.library.ntb.NavigationTabBar;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
-@RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
     @Override
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -108,6 +107,12 @@ public class MainActivity extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(MapFragment.newInstance("Map"));
         return fragments;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }
 

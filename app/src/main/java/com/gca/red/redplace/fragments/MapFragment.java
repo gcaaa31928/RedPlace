@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gca.red.redplace.Manifest;
 import com.gca.red.redplace.R;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -21,13 +20,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-
+import android.Manifest;
 import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks {
 
     private GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
@@ -72,16 +72,42 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
-//    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-//    void getMyLocation() {
-//        if (map != null) {
-//            // Now that map has loaded, let's get our location!
-//            map.setMyLocationEnabled(true);
-//            mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                    .addApi(LocationServices.API)
-//                    .addConnectionCallbacks(this)
-//                    .addOnConnectionFailedListener(this).build();
-//            connectClient();
-//        }
-//    }
+    @SuppressWarnings("all")
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void getMyLocation() {
+        if (map != null) {
+            // Now that map has loaded, let's get our location!
+            map.setMyLocationEnabled(true);
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this).build();
+            connectClient();
+        }
+    }
+
+}
+
+    protected void connectClient() {
+        // Connect the client.
+        if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (i == CAUSE_SERVICE_DISCONNECTED) {
+            Toast.makeText(getContext(), "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+        } else if (i == CAUSE_NETWORK_LOST) {
+            Toast.makeText(getContext(), "Network lost. Please re-connect.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }
