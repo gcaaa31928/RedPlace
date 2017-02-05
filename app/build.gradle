@@ -23,21 +23,36 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    // (v4.5)
+    // (v3,2015)
+    // (v2.0.7)
+    // (v2.0.0)
+    // (v1.4.57)
+    // (latest)
+    // (v2.0)
+    // (v1.0.0)
+    // (v2.0.1)
     compile 'devlight.io:navigationtabbar:1.2.5'
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.android.support:design:25.1.1'
-    testCompile 'junit:junit:4.12'
-
-    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.1' // (v4.5)
-    compile 'com.joanzapata.iconify:android-iconify-entypo:2.2.2' // (v3,2015)
-    compile 'com.joanzapata.iconify:android-iconify-typicons:2.2.2' // (v2.0.7)
-    compile 'com.joanzapata.iconify:android-iconify-material:2.2.2' // (v2.0.0)
-    compile 'com.joanzapata.iconify:android-iconify-material-community:2.2.2' // (v1.4.57)
-    compile 'com.joanzapata.iconify:android-iconify-meteocons:2.2.2' // (latest)
-    compile 'com.joanzapata.iconify:android-iconify-weathericons:2.2.2' // (v2.0)
-    compile 'com.joanzapata.iconify:android-iconify-simplelineicons:2.2.2' // (v1.0.0)
-    compile 'com.joanzapata.iconify:android-iconify-ionicons:2.2.2' // (v2.0.1)
+    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.1'
+    compile 'com.joanzapata.iconify:android-iconify-entypo:2.2.2'
+    compile 'com.joanzapata.iconify:android-iconify-typicons:2.2.2'
+    compile 'com.joanzapata.iconify:android-iconify-material:2.2.2'
+    compile 'com.joanzapata.iconify:android-iconify-material-community:2.2.2'
+    compile 'com.joanzapata.iconify:android-iconify-meteocons:2.2.2'
+    compile 'com.joanzapata.iconify:android-iconify-weathericons:2.2.2'
+    compile 'com.joanzapata.iconify:android-iconify-simplelineicons:2.2.2'
+    compile 'com.joanzapata.iconify:android-iconify-ionicons:2.2.2'
     compile 'com.facebook.android:facebook-android-sdk:4.19.0'
+    compile 'com.orhanobut:hawk:2.0.1'
+    compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
+    compile 'com.github.hotchemi:permissionsdispatcher:2.3.1'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
+    testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'
