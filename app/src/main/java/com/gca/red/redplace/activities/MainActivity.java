@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.gca.red.redplace.Manifest;
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.adapters.PageAdapter;
 import com.gca.red.redplace.fragments.MapFragment;
@@ -16,17 +17,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import devlight.io.library.ntb.NavigationTabBar;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
+@RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
-
     @Override
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initNavigationTabBar();
     }
-
 
 
     private void initNavigationTabBar() {
