@@ -88,63 +88,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-//    private void handleFacebook() {
-//        callbackManager = CallbackManager.Factory.create();
-//        LoginButton loginButton = (LoginButton) findViewById(R.id.fb_login_button);
-//        profileTracker = new ProfileTracker() {
-//            @Override
-//            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-//                if (currentProfile != null) {
-//                    Me.getInstance().setFbProfile(currentProfile);
-//                    enterMainActivity();
-//                }
-//            }
-//        };
-//        accessTokenTracker = new AccessTokenTracker() {
-//            @Override
-//            protected void onCurrentAccessTokenChanged(
-//                    AccessToken oldAccessToken,
-//                    AccessToken currentAccessToken) {
-//                // On AccessToken changes fetch the new profile which fires the event on
-//                // the ProfileTracker if the profile is different
-//                Profile.fetchProfileForCurrentAccessToken();
-//            }
-//        };
-//        Profile.fetchProfileForCurrentAccessToken();
-//        if (Profile.getCurrentProfile() != null) {
-//            Me.getInstance().setFbProfile(Profile.getCurrentProfile());
-//            enterMainActivity();
-//        }
-//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                AccessToken accessToken = loginResult.getAccessToken();
-//                Log.d("LoginActivity", "success");
-//                GraphRequest request = GraphRequest.newMeRequest(
-//                        accessToken,
-//                        new GraphRequest.GraphJSONObjectCallback() {
-//                            @Override
-//                            public void onCompleted(JSONObject object, GraphResponse response) {
-//
-//                                Log.d("LoginActivity", object.toString());
-//                            }
-//                        });
-//                Bundle parameters = new Bundle();
-//                parameters.putString("fields", "id,name,link");
-//                request.setParameters(parameters);
-//                request.executeAsync();
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//            }
-//
-//            @Override
-//            public void onError(FacebookException error) {
-//            }
-//        });
-//    }
-
     private void enterMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
