@@ -1,6 +1,6 @@
 <resources>
     <string name="facebook_app_id">240812453034300</string>
-    <string name="server_client_id">903969416332-9eid03fatpkpqm8dpuora37hf4qfhhi6.apps.googleusercontent.com</string>
+    <string name="server_client_id">903969416332-eig2r0urc27t50u35917ja3jptfckukn.apps.googleusercontent.com</string>
     <string name="app_name">RedPlace</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_login">Sign in</string>

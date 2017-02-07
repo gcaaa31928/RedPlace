@@ -2,9 +2,16 @@ package com.gca.red.redplace.fragments;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.IntentSender;
+import android.hardware.GeomagneticField;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -27,7 +34,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
 
@@ -39,14 +49,16 @@ import permissions.dispatcher.RuntimePermissions;
  */
 @RuntimePermissions
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, SensorEventListener {
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
+    private SensorManager sensorManager;
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private float currentDeclination;
 
 
     public static MapFragment newInstance(String title) {
@@ -61,6 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         View view = inflater.inflate(R.layout.maps, container, false);
         Log.d("MapFragment", "onCreate");
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -68,7 +81,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             mapFragment.getMapAsync(this);
         else
             Toast.makeText(getContext(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+        sensorManager.registerListener(this,sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0), SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
         return view;
+
+    }
+
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -83,9 +114,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         }
 //
 //         Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng sydney = new LatLng(25.055389, 121.543000);
+        map.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_play_arrow_48px))
+                .position(sydney)
+                .title("Marker in Sydney")
+                .flat(true)
+                .rotation(245));
+        CameraPosition cameraPosition = CameraPosition.builder()
+                .target(sydney)
+                .zoom(13)
+                .bearing(90)
+                .build();
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
+//        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
 
@@ -192,7 +234,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
-        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        GeomagneticField field = new GeomagneticField(
+                (float)location.getLatitude(),
+                (float)location.getLongitude(),
+                (float)location.getAltitude(),
+                System.currentTimeMillis()
+        );
+        currentDeclination = field.getDeclination();
+        Toast.makeText(getContext(), Float.toString(currentDeclination), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -230,6 +279,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                     "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
     }
+
 
 
     // Define a DialogFragment that displays the error dialog
