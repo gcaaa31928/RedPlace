@@ -11,7 +11,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -55,6 +54,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
     private SensorManager sensorManager;
+    private Sensor rotationSensor;
+    private float[] rotationMatrix = new float[16];
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -74,6 +75,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        if (rotationSensor == null) {
+            Log.d("MapFragment", "Rotation Sensor null");
+            Toast.makeText(getContext(), "Rotation Sensor was null!!!", Toast.LENGTH_SHORT).show();
+        }
+        sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_STATUS_ACCURACY_LOW);
+
+
         View view = inflater.inflate(R.layout.maps, container, false);
         Log.d("MapFragment", "onCreate");
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -81,24 +90,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             mapFragment.getMapAsync(this);
         else
             Toast.makeText(getContext(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
-        sensorManager.registerListener(this,sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0), SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
         return view;
 
+    }
+
+    private void updateCamera(double bearing) {
+        if (map == null)
+            return;
+        CameraPosition oldPos = map.getCameraPosition();
+        CameraPosition pos = CameraPosition.builder(oldPos).bearing((float)bearing).build();
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+    }
+
+    public void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_STATUS_ACCURACY_LOW);
+    }
+
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
     }
 
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        Log.d("MapFragment", "sensor changed");
+        if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            SensorManager.getRotationMatrixFromVector(
+                    rotationMatrix, event.values);
+            float[] orientation = new float[3];
+            SensorManager.getOrientation(rotationMatrix, orientation);
+            double bearing = Math.toDegrees(orientation[0]) + currentDeclination;
+            updateCamera(bearing);
+        }
     }
+
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
     }
 
@@ -235,9 +266,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
         GeomagneticField field = new GeomagneticField(
-                (float)location.getLatitude(),
-                (float)location.getLongitude(),
-                (float)location.getAltitude(),
+                (float) location.getLatitude(),
+                (float) location.getLongitude(),
+                (float) location.getAltitude(),
                 System.currentTimeMillis()
         );
         currentDeclination = field.getDeclination();
@@ -279,7 +310,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                     "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
     }
-
 
 
     // Define a DialogFragment that displays the error dialog
