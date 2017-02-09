@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.gca.red.redplace.fragments.ErrorDialogFragment;
@@ -36,7 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SensorEventListener, OnMapReadyCallback, LocationListener, GoogleMap.OnMyLocationButtonClickListener {
+        SensorEventListener, OnMapReadyCallback, LocationListener, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener {
     private SensorManager sensorManager;
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
@@ -51,11 +52,13 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     private double currentBearing;
     private LatLng currentLatLng = null;
     private GoogleMapHelperListener listener;
+    private View myLocationButton;
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private long UPDATE_INTERVAL = 60000;
     private long FASTEST_INTERVAL = 5000;
     private final static int CAMERA_ZOOM = 17;
+    private final static String TAG = "GoogleMapHelper";
 
     public GoogleMapHelper(FragmentManager fragmentManager, Activity activity, Context context, SupportMapFragment mapFragment, GoogleMapHelperListener listener) {
         this.fragmentManager = fragmentManager;
@@ -64,6 +67,7 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         this.mapFragment = mapFragment;
         this.listener = listener;
         this.sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+
         rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         registerListener();
         if (rotationSensor == null) {
@@ -115,9 +119,10 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         }
     }
 
+    @SuppressWarnings("all")
     public void getMyLocationAfterPermissionCheck() {
         if (map != null) {
-            map.setMyLocationEnabled(true);
+            map.setMyLocationEnabled(false);
             googleApiClient = new GoogleApiClient.Builder(this.activity)
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(this)
@@ -155,7 +160,7 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         map.animateCamera(CameraUpdateFactory.newCameraPosition(pos));
     }
 
-//    @SuppressWarnings("all")
+    @SuppressWarnings("all")
     protected void startLocationUpdates() {
         locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -166,7 +171,7 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     @Override
-//    @SuppressWarnings("all")
+    @SuppressWarnings("all")
     public void onConnected(@Nullable Bundle bundle) {
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (location != null) {
@@ -250,6 +255,11 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     public boolean onMyLocationButtonClick() {
         updateCamera();
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.d(TAG, "click location button");
     }
 }
 
