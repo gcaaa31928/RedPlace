@@ -3,6 +3,7 @@ package com.gca.red.redplace.fragments;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,9 +41,14 @@ public class MapFragment extends Fragment implements GoogleMapHelperListener {
         View view = inflater.inflate(R.layout.maps, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         googleMapHelper = new GoogleMapHelper(getChildFragmentManager(), getActivity(), getContext(), mapFragment, this);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         View myLocationButton = getView().findViewById(R.id.my_location_button);
         myLocationButton.setOnClickListener(googleMapHelper);
-        return view;
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})

@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gca.red.redplace.R;
 import com.gca.red.redplace.fragments.ErrorDialogFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -29,15 +30,18 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by red on 2017/2/8.
  */
 
 public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SensorEventListener, OnMapReadyCallback, LocationListener, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener {
+        SensorEventListener, OnMapReadyCallback, LocationListener, View.OnClickListener {
     private SensorManager sensorManager;
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
@@ -52,7 +56,7 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     private double currentBearing;
     private LatLng currentLatLng = null;
     private GoogleMapHelperListener listener;
-    private View myLocationButton;
+    private Marker myLocationMarker;
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private long UPDATE_INTERVAL = 60000;
@@ -150,9 +154,24 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         }
     }
 
+    private void updateMyLocationMarker() {
+        if (currentLatLng == null)
+            return;
+        if (myLocationMarker == null)
+            myLocationMarker = map.addMarker(new MarkerOptions()
+                    .flat(true)
+                    .icon(BitmapDescriptorFactory
+                            .fromResource(R.drawable.ic_navigation))
+                    .anchor(0.5f, 0.5f)
+                    .position(currentLatLng));
+        myLocationMarker.setPosition(currentLatLng);
+        myLocationMarker.setRotation((float)currentBearing);
+    }
+
     private void updateCamera() {
         if (map == null || currentLatLng == null)
             return;
+
         CameraPosition pos = CameraPosition.builder()
                 .target(currentLatLng)
                 .zoom(CAMERA_ZOOM)
@@ -216,7 +235,8 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
             float[] orientation = new float[3];
             SensorManager.getOrientation(rotationMatrix, orientation);
             currentBearing = Math.toDegrees(orientation[0]) + currentDeclination;
-//            updateCamera();
+            updateMyLocationMarker();
+
         }
     }
 
@@ -228,7 +248,6 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.setOnMyLocationButtonClickListener(this);
         if (map != null) {
             getMyLocationBeforePermissionCheck();
         }
@@ -252,14 +271,8 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     @Override
-    public boolean onMyLocationButtonClick() {
-        updateCamera();
-        return true;
-    }
-
-    @Override
     public void onClick(View v) {
-        Log.d(TAG, "click location button");
+        updateCamera();
     }
 }
 
