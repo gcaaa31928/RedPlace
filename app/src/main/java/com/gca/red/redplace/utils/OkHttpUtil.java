@@ -3,7 +3,9 @@ package com.gca.red.redplace.utils;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.gca.red.redplace.utils.JsonUtil;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.google.gson.internal.$Gson$Types;
 
 import java.io.IOException;
@@ -38,7 +40,7 @@ public class OkHttpUtil {
     }
 
     private synchronized static OkHttpUtil getInstance() {
-        if(mInstance==null) {
+        if (mInstance == null) {
             mInstance = new OkHttpUtil();
         }
         return mInstance;
@@ -56,7 +58,7 @@ public class OkHttpUtil {
 
     private Request buildPostRequest(String url, List<Param> params) {
         FormBody.Builder builder = new FormBody.Builder();
-        for(Param param: params) {
+        for (Param param : params) {
             builder.add(param.key, param.value);
         }
         RequestBody requestBody = builder.build();
@@ -74,13 +76,17 @@ public class OkHttpUtil {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     String str = response.body().string();
-                    if(callback.mType == String.class) {
+                    if (callback.mType == String.class) {
                         sendSuccessCallback(callback, str);
-                    }else {
+                    } else if (callback.mType == JsonObject.class) {
+                        JsonParser parser = new JsonParser();
+                        JsonObject object = parser.parse(str).getAsJsonObject();
+                        sendSuccessCallback(callback, object);
+                    } else {
                         Object object = JsonUtil.deserialize(str, callback.mType);
                         sendSuccessCallback(callback, object);
                     }
-                }catch (final Exception e) {
+                } catch (final Exception e) {
                     sendFailCallback(callback, e);
                 }
             }
@@ -119,6 +125,7 @@ public class OkHttpUtil {
 
     public static abstract class ResultCallback<T> {
         Type mType;
+
         public ResultCallback() {
             mType = getSuperClassTypeParameter(getClass());
         }
@@ -131,14 +138,19 @@ public class OkHttpUtil {
             ParameterizedType parameterized = (ParameterizedType) superClass;
             return $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[0]);
         }
+
         public abstract void onSuccess(T response);
+
         public abstract void onFailure(Exception e);
     }
 
     public static class Param {
         String key;
         String value;
-        public Param(){}
+
+        public Param() {
+        }
+
         public Param(String key, String value) {
             this.key = key;
             this.value = value;
