@@ -3,10 +3,9 @@ package com.gca.red.redplace.helpers;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
-import com.gca.red.redplace.objects.GoogleProfile;
+import com.gca.red.redplace.objects.Profile;
 import com.gca.red.redplace.objects.Me;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,7 +26,7 @@ public class GoogleHelper implements View.OnClickListener, GoogleApiClient.OnCon
     protected void onSignInSuccess(Intent signInIntent) {
     }
 
-    protected void onFetchProfileSuccess(GoogleProfile profile) {
+    protected void onFetchProfileSuccess(Profile profile) {
     }
 
     public void onCreate(AppCompatActivity activity) {
@@ -61,7 +60,7 @@ public class GoogleHelper implements View.OnClickListener, GoogleApiClient.OnCon
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Me.getInstance().setGoogleProfile(acct);
-            onFetchProfileSuccess(Me.getInstance().getGoogleProfile());
+            onFetchProfileSuccess(Me.getInstance().getProfile());
         } else {
             // Signed out, show unauthenticated UI.
         }

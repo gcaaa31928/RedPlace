@@ -15,7 +15,7 @@ public class UserHelper {
     private static final String USERS_URL = BACKEND_URL + "/users";
     private static final String TAG = "UserHelper";
 
-    private void loadUser() {
+    private void login() {
         OkHttpUtil.ResultCallback<JsonObject> loadUsersCallback = new OkHttpUtil.ResultCallback<JsonObject>() {
             @Override
             public void onSuccess(JsonObject response) {

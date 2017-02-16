@@ -2,6 +2,7 @@ package com.gca.red.redplace.helpers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -17,6 +18,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.gca.red.redplace.objects.Me;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -36,31 +38,32 @@ public class FacebookHelper {
     }
 
     public void onCreate() {
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                fetchUserInfo();
-                onAccessTokenChanged(oldAccessToken, currentAccessToken);
-            }
-        };
-        profileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                if (currentProfile != null) {
-                    Me.getInstance().setFbProfile(Profile.getCurrentProfile());
-                    onFetchProfileSuccess();
-                }
-            }
-        };
+//        accessTokenTracker = new AccessTokenTracker() {
+//            @Override
+//            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+//                fetchUserInfo();
+//                onAccessTokenChanged(oldAccessToken, currentAccessToken);
+//            }
+//        };
+//        profileTracker = new ProfileTracker() {
+//            @Override
+//            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+//                if (currentProfile != null) {
+//                    Me.getInstance().setFbProfile(Profile.getCurrentProfile());
+//                    onFetchProfileSuccess();
+//                }
+//            }
+//        };
         callbackManager = CallbackManager.Factory.create();
-        fetchUserInfo();
+        fetchUserInfo(null);
     }
 
     public void loginButtonRegisterCallback(LoginButton loginButton) {
+        loginButton.setReadPermissions("email", "public_profile");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
+                fetchUserInfo(loginResult);
             }
 
             @Override
@@ -89,12 +92,34 @@ public class FacebookHelper {
             callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void fetchUserInfo() {
-        Profile.fetchProfileForCurrentAccessToken();
-        if (Profile.getCurrentProfile() != null) {
-            Me.getInstance().setFbProfile(Profile.getCurrentProfile());
-            onFetchProfileSuccess();
-        }
+    private void fetchUserInfo(LoginResult loginResult) {
+        AccessToken accessToken;
+        if (loginResult != null)
+            accessToken = loginResult.getAccessToken();
+        else
+            accessToken = AccessToken.getCurrentAccessToken();
+        GraphRequest request = GraphRequest.newMeRequest(
+                accessToken, new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject me, GraphResponse response) {
+                        if (response.getError() != null) {
+                            // handle error
+                        } else {
+                            Me.getInstance().setFbProfile(me);
+                            Log.e("Result1", response.getRawResponse());
+                            Log.e("Result", me.toString());
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id, first_name, last_name, email, picture");
+        request.setParameters(parameters);
+        request.executeAsync();
+//        Profile.fetchProfileForCurrentAccessToken();
+//        if (Profile.getCurrentProfile() != null) {
+//            Me.getInstance().setFbProfile(Profile.getCurrentProfile());
+//            onFetchProfileSuccess();
+//        }
     }
 
 }

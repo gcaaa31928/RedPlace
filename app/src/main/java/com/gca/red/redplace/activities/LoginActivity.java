@@ -1,37 +1,15 @@
 package com.gca.red.redplace.activities;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.helpers.FacebookHelper;
 import com.gca.red.redplace.helpers.GoogleHelper;
-import com.gca.red.redplace.objects.GoogleProfile;
-import com.gca.red.redplace.objects.Me;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import org.json.JSONObject;
+import com.gca.red.redplace.objects.Profile;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -59,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onFetchProfileSuccess(GoogleProfile profile) {
+            protected void onFetchProfileSuccess(Profile profile) {
                 enterMainActivity();
             }
         };
