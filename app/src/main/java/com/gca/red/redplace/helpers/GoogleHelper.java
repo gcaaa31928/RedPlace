@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.JsonObject;
 
 /**
  * Created by redhuang on 2017/2/4.
@@ -60,7 +61,18 @@ public class GoogleHelper implements View.OnClickListener, GoogleApiClient.OnCon
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Me.getInstance().setGoogleProfile(acct);
-            onFetchProfileSuccess(Me.getInstance().getProfile());
+            Me.LoginResultCallback resultCallback = new Me.LoginResultCallback() {
+                @Override
+                public void onSuccess(JsonObject response) {
+                    onFetchProfileSuccess(Me.getInstance().getProfile());
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            };
+            Me.getInstance().login(resultCallback);
         } else {
             // Signed out, show unauthenticated UI.
         }

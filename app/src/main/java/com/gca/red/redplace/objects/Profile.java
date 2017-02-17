@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.JsonObject;
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +17,7 @@ public class Profile {
     private String name;
     private String photoUrl;
     private String email;
+    private String accessToken;
 
     public Profile() {
 
@@ -29,7 +31,7 @@ public class Profile {
 
     public void importFacebookData(JSONObject data) throws JSONException {
         name = data.optString("last_name") + data.optString("first_name");
-        photoUrl = data.getJSONObject("picture").optString("url");
+        photoUrl = data.getJSONObject("picture").getJSONObject("data").optString("url");
         email = data.optString("email");
     }
 
@@ -43,5 +45,14 @@ public class Profile {
 
     public String getEmail() {
         return email;
+    }
+
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

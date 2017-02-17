@@ -17,6 +17,8 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.gca.red.redplace.objects.Me;
+import com.google.gson.JsonObject;
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,9 +107,13 @@ public class FacebookHelper {
                         if (response.getError() != null) {
                             // handle error
                         } else {
-                            Me.getInstance().setFbProfile(me);
-                            Log.e("Result1", response.getRawResponse());
-                            Log.e("Result", me.toString());
+                            try {
+                                Me.getInstance().setFbProfile(me);
+                                userLogin();
+                            } catch (JSONException e) {
+                                Logger.e(e, "JSON exception");
+                            }
+                            Logger.d(response.getRawResponse());
                         }
                     }
                 });
@@ -115,11 +121,21 @@ public class FacebookHelper {
         parameters.putString("fields", "id, first_name, last_name, email, picture");
         request.setParameters(parameters);
         request.executeAsync();
-//        Profile.fetchProfileForCurrentAccessToken();
-//        if (Profile.getCurrentProfile() != null) {
-//            Me.getInstance().setFbProfile(Profile.getCurrentProfile());
-//            onFetchProfileSuccess();
-//        }
+    }
+
+    private void userLogin() {
+        Me.LoginResultCallback loginResultCallback = new Me.LoginResultCallback() {
+            @Override
+            public void onSuccess(JsonObject response) {
+                onFetchProfileSuccess();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        };
+        Me.getInstance().login(loginResultCallback);
     }
 
 }
