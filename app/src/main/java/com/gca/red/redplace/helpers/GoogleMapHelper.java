@@ -11,6 +11,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -28,13 +29,14 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.orhanobut.logger.Logger;
 
 /**
  * Created by red on 2017/2/8.
@@ -50,7 +52,7 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     private float[] rotationMatrix = new float[16];
     private Activity activity;
     private Context context;
-    private SupportMapFragment mapFragment;
+    private MapView mapView;
     private GoogleMap map;
     private float currentDeclination;
     private double currentBearing;
@@ -62,13 +64,20 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     private long UPDATE_INTERVAL = 60000;
     private long FASTEST_INTERVAL = 5000;
     private final static int CAMERA_ZOOM = 17;
-    private final static String TAG = "GoogleMapHelper";
+    private Handler handler = new Handler();
+    Runnable updateLocationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateMyLocationMarker();
+            handler.postDelayed(this, 2000);
+        }
+    };
 
-    public GoogleMapHelper(FragmentManager fragmentManager, Activity activity, Context context, SupportMapFragment mapFragment, GoogleMapHelperListener listener) {
+    public GoogleMapHelper(FragmentManager fragmentManager, Activity activity, Context context, MapView mapView, GoogleMapHelperListener listener) {
         this.fragmentManager = fragmentManager;
         this.activity = activity;
         this.context = context;
-        this.mapFragment = mapFragment;
+        this.mapView = mapView;
         this.listener = listener;
         this.sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
 
@@ -78,10 +87,13 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
             Log.d("GoogleMapHelper", "Rotation Sensor was null!!");
             Toast.makeText(this.context, "Rotation Sensor was null!!", Toast.LENGTH_SHORT).show();
         }
-        if (mapFragment != null)
-            mapFragment.getMapAsync(this);
+        if (mapView != null) {
+            mapView.getMapAsync(this);
+            Logger.d("called get map");
+            handler.postDelayed(updateLocationRunnable, 2000);
+        }
         else
-            Toast.makeText(this.context, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.context, "Error - Map View was null!!", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -165,7 +177,7 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
                     .anchor(0.5f, 0.5f)
                     .position(currentLatLng));
         myLocationMarker.setPosition(currentLatLng);
-        myLocationMarker.setRotation((float)currentBearing);
+        myLocationMarker.setRotation((float) currentBearing);
     }
 
     private void updateCamera() {
@@ -248,6 +260,8 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        mapView.onResume();
+        Logger.d("google map done");
         if (map != null) {
             getMyLocationBeforePermissionCheck();
         }

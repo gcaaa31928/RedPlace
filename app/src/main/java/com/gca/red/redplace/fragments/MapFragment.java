@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.helpers.GoogleMapHelper;
 import com.gca.red.redplace.helpers.GoogleMapHelperListener;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.orhanobut.logger.Logger;
 
@@ -26,6 +27,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class MapFragment extends Fragment implements GoogleMapHelperListener {
 
     private GoogleMapHelper googleMapHelper;
+    private MapView mapView;
 
     public static MapFragment newInstance(String title) {
         MapFragment fragment = new MapFragment();
@@ -40,14 +42,15 @@ public class MapFragment extends Fragment implements GoogleMapHelperListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        googleMapHelper = new GoogleMapHelper(getChildFragmentManager(), getActivity(), getContext(), mapFragment, this);
         return inflater.inflate(R.layout.maps, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mapView = (MapView) getView().findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+        googleMapHelper = new GoogleMapHelper(getChildFragmentManager(), getActivity(), getContext(), mapView, this);
         View myLocationButton = getView().findViewById(R.id.my_location_button);
         myLocationButton.setOnClickListener(googleMapHelper);
     }
@@ -80,6 +83,10 @@ public class MapFragment extends Fragment implements GoogleMapHelperListener {
         MapFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public void onStart() {
