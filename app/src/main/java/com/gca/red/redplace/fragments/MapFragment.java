@@ -14,6 +14,7 @@ import com.gca.red.redplace.R;
 import com.gca.red.redplace.helpers.GoogleMapHelper;
 import com.gca.red.redplace.helpers.GoogleMapHelperListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.orhanobut.logger.Logger;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -29,6 +30,7 @@ public class MapFragment extends Fragment implements GoogleMapHelperListener {
     public static MapFragment newInstance(String title) {
         MapFragment fragment = new MapFragment();
         Bundle bundle = new Bundle();
+        Logger.d(title);
         bundle.putString("title", title);
         fragment.setArguments(bundle);
         return fragment;
@@ -38,10 +40,9 @@ public class MapFragment extends Fragment implements GoogleMapHelperListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.maps, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         googleMapHelper = new GoogleMapHelper(getChildFragmentManager(), getActivity(), getContext(), mapFragment, this);
-        return view;
+        return inflater.inflate(R.layout.maps, container, false);
     }
 
     @Override

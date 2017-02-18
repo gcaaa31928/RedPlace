@@ -9,6 +9,7 @@ import com.facebook.login.widget.LoginButton;
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.helpers.FacebookHelper;
 import com.gca.red.redplace.helpers.GoogleHelper;
+import com.gca.red.redplace.objects.Me;
 import com.gca.red.redplace.objects.Profile;
 
 public class LoginActivity extends AppCompatActivity {
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Me.getInstance().setContext(getApplicationContext());
         facebookHelper = new FacebookHelper() {
             @Override
             protected void onFetchProfileSuccess() {

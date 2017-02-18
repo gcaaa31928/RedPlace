@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.Manifest;
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.adapters.PageAdapter;
+import com.gca.red.redplace.fragments.FriendFragment;
 import com.gca.red.redplace.fragments.MapFragment;
 
 import java.util.ArrayList;
@@ -106,6 +107,11 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> getFragments() {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(MapFragment.newInstance("Map"));
+//        fragments.add(FriendFragment.newInstance("oh", "ya"));
+        fragments.add(FriendFragment.newInstance("oh", "ya"));
+        fragments.add(FriendFragment.newInstance("oh", "ya"));
+//        fragments.add(MapFragment.newInstance("Settings"));
+//        fragments.add(MapFragment.newInstance("Settings"));
         return fragments;
     }
 

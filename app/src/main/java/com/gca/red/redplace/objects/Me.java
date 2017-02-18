@@ -1,5 +1,8 @@
 package com.gca.red.redplace.objects;
 
+import android.content.Context;
+
+import com.gca.red.redplace.R;
 import com.gca.red.redplace.utils.OkHttpUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.JsonObject;
@@ -16,9 +19,10 @@ import java.util.List;
  */
 public class Me {
     private static Me ourInstance = new Me();
-    private static final String BACKEND_URL = "http://140.124.183.101:3000";
-    private static final String USERS_URL = BACKEND_URL + "/users";
-    private static final String LOGIN_URL = USERS_URL + "/login";
+
+
+    private Context context;
+    private String backendUrl;
 
     public static Me getInstance() {
         return ourInstance;
@@ -28,6 +32,11 @@ public class Me {
     }
 
     private Profile profile = null;
+
+    public void setContext(Context context) {
+        this.context = context;
+        this.backendUrl = this.context.getString(R.string.server_address);
+    }
 
     public void setGoogleProfile(GoogleSignInAccount acc) {
         this.profile = new Profile();
@@ -45,6 +54,7 @@ public class Me {
 
 
     public void login(final LoginResultCallback callback) {
+        String loginUrl = backendUrl + "/users/login";
         OkHttpUtil.ResultCallback<JsonObject> loginCallback = new OkHttpUtil.ResultCallback<JsonObject>() {
             @Override
             public void onSuccess(JsonObject response) {
@@ -62,8 +72,8 @@ public class Me {
                 new OkHttpUtil.Param("name", profile.getName()),
                 new OkHttpUtil.Param("photoUrl", profile.getPhotoUrl()),
                 new OkHttpUtil.Param("email", profile.getEmail()));
-        Logger.d(LOGIN_URL);
-        OkHttpUtil.post(LOGIN_URL, loginCallback, params);
+        Logger.d(loginUrl);
+        OkHttpUtil.post(loginUrl, loginCallback, params);
     }
 
     public static abstract class LoginResultCallback {
