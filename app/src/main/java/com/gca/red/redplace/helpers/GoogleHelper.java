@@ -61,7 +61,7 @@ public class GoogleHelper implements View.OnClickListener, GoogleApiClient.OnCon
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Me.getInstance().setGoogleProfile(acct);
-            Me.LoginResultCallback resultCallback = new Me.LoginResultCallback() {
+            Me.ResultCallback<JsonObject> resultCallback = new Me.ResultCallback<JsonObject>() {
                 @Override
                 public void onSuccess(JsonObject response) {
                     onFetchProfileSuccess(Me.getInstance().getProfile());

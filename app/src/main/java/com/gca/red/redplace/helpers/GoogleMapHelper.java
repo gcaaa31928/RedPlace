@@ -89,7 +89,6 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         }
         if (mapView != null) {
             mapView.getMapAsync(this);
-            Logger.d("called get map");
             handler.postDelayed(updateLocationRunnable, 2000);
         }
         else

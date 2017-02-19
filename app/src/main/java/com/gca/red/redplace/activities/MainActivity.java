@@ -107,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> getFragments() {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(MapFragment.newInstance("Map"));
-        fragments.add(FriendFragment.newInstance("oh", "ya"));
-        fragments.add(FriendFragment.newInstance("oh", "ya"));
+        fragments.add(FriendFragment.newInstance());
+        fragments.add(FriendFragment.newInstance());
 //        fragments.add(FriendFragment.newInstance("oh", "ya"));
 //        fragments.add(MapFragment.newInstance("Settings"));
 //        fragments.add(MapFragment.newInstance("Settings"));

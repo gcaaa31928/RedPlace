@@ -2,12 +2,19 @@ package com.gca.red.redplace.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gca.red.redplace.R;
+import com.gca.red.redplace.adapters.FriendAdapter;
+import com.gca.red.redplace.objects.Me;
+import com.google.gson.JsonArray;
+import com.victor.loading.rotate.RotateLoading;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,34 +22,19 @@ import com.gca.red.redplace.R;
  * create an instance of this fragment.
  */
 public class FriendFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private RotateLoading loading;
+    private RecyclerView.Adapter friendAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView friendView;
 
     public FriendFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FriendFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FriendFragment newInstance(String param1, String param2) {
+    public static FriendFragment newInstance() {
         FriendFragment fragment = new FriendFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,17 +42,37 @@ public class FriendFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_friend, container, false);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
+        friendView = (RecyclerView)getView().findViewById(R.id.friend_recycler_view);
+        friendView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        friendView.setLayoutManager(layoutManager);
+        friendAdapter = new FriendAdapter();
+        friendView.setAdapter(friendAdapter);
+        loading = (RotateLoading) getView().findViewById(R.id.rotateloading);
+        loading.start();
+        Me.ResultCallback<JsonArray> callback = new Me.ResultCallback<JsonArray>() {
+            @Override
+            public void onSuccess(JsonArray response) {
+                loading.stop();
+            }
+            @Override
+            public void onFailure(Exception e) {
+            }
+        };
+        Me.getInstance().getFriends(callback);
+        super.onActivityCreated(savedInstanceState);
+    }
 }

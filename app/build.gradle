@@ -58,6 +58,8 @@ dependencies {
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.orhanobut:logger:1.15'
+    compile 'com.victor:lib:1.0.4'
+    compile "com.daimajia.swipelayout:library:1.2.0@aar"
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.1'
 }

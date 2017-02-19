@@ -3,6 +3,7 @@ package com.gca.red.redplace.utils;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -11,6 +12,7 @@ import com.google.gson.internal.$Gson$Types;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -46,23 +48,32 @@ public class OkHttpUtil {
         return mInstance;
     }
 
-    private void getRequest(String url, final ResultCallback callback) {
-        final Request request = new Request.Builder().url(url).build();
+
+    private void getRequest(String url, final ResultCallback callback, List<Param> headers) {
+        final Request.Builder builder = new Request.Builder();
+        for (Param header : headers) {
+            builder.addHeader(header.key, header.value);
+        }
+        final Request request = builder.url(url).build();
         deliveryResult(callback, request);
     }
 
-    private void postRequest(String url, final ResultCallback callback, List<Param> params) {
-        final Request request = buildPostRequest(url, params);
+    private void postRequest(String url, final ResultCallback callback, List<Param> params, List<Param> headers) {
+        final Request request = buildPostRequest(url, params, headers);
         deliveryResult(callback, request);
     }
 
-    private Request buildPostRequest(String url, List<Param> params) {
+    private Request buildPostRequest(String url, List<Param> params, List<Param> headers) {
         FormBody.Builder builder = new FormBody.Builder();
         for (Param param : params) {
             builder.add(param.key, param.value);
         }
         RequestBody requestBody = builder.build();
-        return new Request.Builder().url(url).post(requestBody).build();
+        Request.Builder requestBuilder = new Request.Builder();
+        for (Param header : headers) {
+            requestBuilder.addHeader(header.key, header.value);
+        }
+        return requestBuilder.url(url).post(requestBody).build();
     }
 
     private void deliveryResult(final ResultCallback callback, Request request) {
@@ -82,6 +93,10 @@ public class OkHttpUtil {
                         JsonParser parser = new JsonParser();
                         JsonObject object = parser.parse(str).getAsJsonObject();
                         sendSuccessCallback(callback, object);
+                    } else if (callback.mType == JsonArray.class) {
+                        JsonParser parser = new JsonParser();
+                        JsonArray array = parser.parse(str).getAsJsonArray();
+                        sendSuccessCallback(callback, array);
                     } else {
                         Object object = JsonUtil.deserialize(str, callback.mType);
                         sendSuccessCallback(callback, object);
@@ -115,12 +130,22 @@ public class OkHttpUtil {
         });
     }
 
+    public static void get(String url, ResultCallback callback, List<Param> headers) {
+        getInstance().getRequest(url, callback, headers);
+    }
+
     public static void get(String url, ResultCallback callback) {
-        getInstance().getRequest(url, callback);
+        List<Param> headers = new ArrayList<>();
+        getInstance().getRequest(url, callback, headers);
+    }
+
+    public static void post(String url, final ResultCallback callback, List<Param> params, List<Param> headers) {
+        getInstance().postRequest(url, callback, params, headers);
     }
 
     public static void post(String url, final ResultCallback callback, List<Param> params) {
-        getInstance().postRequest(url, callback, params);
+        List<Param> headers = new ArrayList<>();
+        getInstance().postRequest(url, callback, params, headers);
     }
 
     public static abstract class ResultCallback<T> {

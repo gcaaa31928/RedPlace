@@ -124,7 +124,7 @@ public class FacebookHelper {
     }
 
     private void userLogin() {
-        Me.LoginResultCallback loginResultCallback = new Me.LoginResultCallback() {
+        Me.ResultCallback<JsonObject> loginResultCallback = new Me.ResultCallback<JsonObject>() {
             @Override
             public void onSuccess(JsonObject response) {
                 onFetchProfileSuccess();
