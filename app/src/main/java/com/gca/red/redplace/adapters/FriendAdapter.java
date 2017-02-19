@@ -14,13 +14,14 @@ import com.gca.red.redplace.R;
 import com.gca.red.redplace.fragments.FriendFragment;
 import com.gca.red.redplace.objects.Friend;
 import com.gca.red.redplace.objects.Me;
+import com.gca.red.redplace.utils.ImageLoaderUtil;
 
 /**
  * Created by red2 on 2017/2/19.
  */
 
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
-    private LayoutInflater layoutInflater;
+    private Context context;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -34,10 +35,12 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
             super(view);
             this.view = view;
             nameText = (TextView) view.findViewById(R.id.name);
+            picture = (ImageView) view.findViewById(R.id.picture);
         }
     }
 
-    public FriendAdapter() {
+    public FriendAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -54,6 +57,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
             Friend friend = Me.getInstance().getFriends().get(position);
             if (friend == null) return;
             holder.nameText.setText(friend.getName());
+            ImageLoaderUtil.display(context, holder.picture, friend.getPhotoUrl());
         }
     }
 

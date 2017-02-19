@@ -116,6 +116,24 @@ public class Me {
         OkHttpUtil.get(loginUrl, getFriendsCallback, headers);
     }
 
+    public void getFriendToken(final ResultCallback callback) {
+        String loginUrl = backendUrl + "/users/my/friend_token";
+        OkHttpUtil.ResultCallback<JsonObject> getFriendsCallback = new OkHttpUtil.ResultCallback<JsonObject>() {
+            @Override
+            public void onSuccess(JsonObject response) {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Logger.e("cannot connect to server");
+                callback.onFailure(e);
+            }
+        };
+        List<OkHttpUtil.Param> headers = Arrays.asList(new OkHttpUtil.Param("accessToken", profile.getAccessToken()));
+        List<OkHttpUtil.Param> params = new ArrayList<>();
+        OkHttpUtil.post(loginUrl, getFriendsCallback, params, headers);
+    }
 
     public static abstract class ResultCallback<T> {
         public abstract void onSuccess(T response);

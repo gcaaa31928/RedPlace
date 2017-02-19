@@ -5,11 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 
 import android.Manifest;
+import android.view.MotionEvent;
+import android.view.View;
+
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.adapters.PageAdapter;
 import com.gca.red.redplace.fragments.FriendFragment;
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
 
         navigationTabBar.setModels(models);
+        navigationTabBar.setIsSwiped(false);
         navigationTabBar.setViewPager(viewPager, 0);
         navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -1,13 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:
+    android:id="@+id/add_friend_dialog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.joanzapata.iconify.widget.IconButton
+        android:id="@+id/qrcode_camra_button"
+        android:text="好友條碼掃描器 {fa-camera}"
+        android:textSize="30sp"
+        android:layout_height="60dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_alignParentRight="true"/>
 
-</FrameLayout>
+    <com.joanzapata.iconify.widget.IconButton
+        android:id="@+id/show_qrcode_button"
+        android:text="顯示自己條碼 {fa-qrcode}"
+        android:textSize="30sp"
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentRight="true"/>
+
+</LinearLayout>

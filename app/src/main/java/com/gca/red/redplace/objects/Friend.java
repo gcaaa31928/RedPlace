@@ -7,6 +7,7 @@ package com.gca.red.redplace.objects;
 public class Friend {
     private String name;
     private String uuid;
+    private String photoUrl;
 
     public String getName() {
         return name;
@@ -22,5 +23,13 @@ public class Friend {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
