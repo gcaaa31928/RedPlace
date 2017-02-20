@@ -90,8 +90,7 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         if (mapView != null) {
             mapView.getMapAsync(this);
             handler.postDelayed(updateLocationRunnable, 2000);
-        }
-        else
+        } else
             Toast.makeText(this.context, "Error - Map View was null!!", Toast.LENGTH_SHORT).show();
     }
 

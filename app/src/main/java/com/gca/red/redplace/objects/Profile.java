@@ -25,7 +25,12 @@ public class Profile {
 
     public void importGoogleAccount(GoogleSignInAccount acc) {
         name = acc.getDisplayName();
-        photoUrl = acc.getPhotoUrl().toString();
+        try {
+            photoUrl = acc.getPhotoUrl().toString();
+        }catch (Exception e) {
+            photoUrl = "";
+            Logger.e("dont get url", e);
+        }
         email = acc.getEmail();
     }
 
