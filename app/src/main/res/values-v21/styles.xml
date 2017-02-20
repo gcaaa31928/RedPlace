@@ -18,5 +18,6 @@
             @color/cast_intro_overlay_button_background_color
         </item>
         <item name="android:textColorSecondaryInverse">@color/colorPrimary</item>
+        <item name="android:colorForeground">@color/foreground_material_dark</item>
     </style>
 </resources>

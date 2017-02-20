@@ -10,10 +10,9 @@
         <item name="colorButtonNormal">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="android:textColorPrimary">@color/cast_expanded_controller_progress_text_color</item>
-        <item name="android:textColorPrimaryInverse">
-            @color/cast_intro_overlay_button_background_color
-        </item>
+        <item name="android:textColorPrimaryInverse">@color/colorPrimaryDark</item>
         <item name="android:textColorSecondaryInverse">@color/colorPrimary</item>
+        <item name="android:colorForeground">@color/foreground_material_dark</item>
     </style>
 
 </resources>
