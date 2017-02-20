@@ -60,15 +60,6 @@ public class MainActivity extends AppCompatActivity {
                         .badgeTitle("with")
                         .build()
         );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_accessibility_black_24dp),
-                        Color.parseColor(colors[2]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_accessibility_black_24dp))
-                        .title("Diploma")
-                        .badgeTitle("state")
-                        .build()
-        );
         List<Fragment> fragmentList = getFragments();
         PagerAdapter adapter = new PageAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(adapter);
@@ -112,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> getFragments() {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(MapFragment.newInstance("Map"));
-        fragments.add(FriendFragment.newInstance());
         fragments.add(FriendFragment.newInstance());
 //        fragments.add(FriendFragment.newInstance("oh", "ya"));
 //        fragments.add(MapFragment.newInstance("Settings"));

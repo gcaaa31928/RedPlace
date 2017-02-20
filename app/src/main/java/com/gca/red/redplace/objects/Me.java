@@ -49,6 +49,7 @@ public class Me {
     }
 
     public void setFriends(JsonArray friendJson) {
+        friends.clear();
         for (int i = 0; i < friendJson.size(); i++) {
             JsonObject jsonObject = friendJson.get(i).getAsJsonObject();
             Friend friend = JsonUtil.deserialize(jsonObject, Friend.class);
