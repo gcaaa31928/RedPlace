@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.gca.red.redplace.R;
+import com.gca.red.redplace.adapters.MapFriendAdapter;
 import com.gca.red.redplace.helpers.GoogleMapHelper;
 import com.gca.red.redplace.helpers.GoogleMapHelperListener;
 import com.google.android.gms.maps.MapView;
@@ -53,6 +55,9 @@ public class MapFragment extends Fragment implements GoogleMapHelperListener {
         googleMapHelper = new GoogleMapHelper(getChildFragmentManager(), getActivity(), getContext(), mapView, this);
         View myLocationButton = getView().findViewById(R.id.my_location_button);
         myLocationButton.setOnClickListener(googleMapHelper);
+
+        ListView mapFriendListView = (ListView) getView().findViewById(R.id.mapFriendsList);
+        mapFriendListView.setAdapter(new MapFriendAdapter(getContext()));
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})

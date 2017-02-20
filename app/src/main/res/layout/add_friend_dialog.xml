@@ -7,7 +7,7 @@
 
     <com.joanzapata.iconify.widget.IconButton
         android:id="@+id/qrcode_camra_button"
-        android:text="{fa-camera}好友條碼掃描器"
+        android:text="{fa-camera} 好友條碼掃描器"
         android:textSize="30sp"
         android:layout_height="60dp"
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
 
     <com.joanzapata.iconify.widget.IconButton
         android:id="@+id/show_qrcode_button"
-        android:text="{fa-qrcode}顯示自己條碼"
+        android:text="{fa-qrcode} 顯示自己條碼"
         android:textSize="30sp"
         android:layout_height="60dp"
         android:layout_width="match_parent"
