@@ -21,6 +21,9 @@ import android.widget.Toast;
 
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.fragments.ErrorDialogFragment;
+import com.gca.red.redplace.objects.Me;
+import com.gca.red.redplace.objects.Profile;
+import com.gca.red.redplace.utils.MapSocketIOUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.orhanobut.logger.Logger;
@@ -176,6 +180,11 @@ public class GoogleMapHelper implements GoogleApiClient.ConnectionCallbacks, Goo
                     .position(currentLatLng));
         myLocationMarker.setPosition(currentLatLng);
         myLocationMarker.setRotation((float) currentBearing);
+        Profile profile = Me.getInstance().getProfile();
+        profile.setLatitude((long)currentLatLng.latitude);
+        profile.setLongitude((long)currentLatLng.longitude);
+        profile.setOrientation((long)currentBearing);
+        MapSocketIOUtil.getInstance().sendMyLocation();
     }
 
     private void updateCamera() {

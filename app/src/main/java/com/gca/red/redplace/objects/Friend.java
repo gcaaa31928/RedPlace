@@ -8,6 +8,9 @@ public class Friend {
     private String name;
     private String uuid;
     private String photoUrl;
+    private float latitude;
+    private float longitude;
+    private float orientation;
 
     public String getName() {
         return name;
@@ -31,5 +34,29 @@ public class Friend {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public float getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(float orientation) {
+        this.orientation = orientation;
     }
 }

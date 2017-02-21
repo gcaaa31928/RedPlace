@@ -18,6 +18,11 @@ public class Profile {
     private String photoUrl;
     private String email;
     private String accessToken;
+    private String uuid;
+    private Long latitude;
+    private Long longitude;
+    private Long orientation;
+
 
     public Profile() {
 
@@ -52,6 +57,37 @@ public class Profile {
         return email;
     }
 
+    public Long getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Long latitude) {
+        this.latitude = latitude;
+    }
+
+    public Long getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Long longitude) {
+        this.longitude = longitude;
+    }
+
+    public Long getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Long orientation) {
+        this.orientation = orientation;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getAccessToken() {
         return accessToken;

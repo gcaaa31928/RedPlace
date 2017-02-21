@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.gca.red.redplace.R;
 import com.gca.red.redplace.utils.JsonUtil;
+import com.gca.red.redplace.utils.MapSocketIOUtil;
 import com.gca.red.redplace.utils.OkHttpUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.JsonArray;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,6 +30,7 @@ public class Me {
     private Context context;
     private String backendUrl;
     private List<Friend> friends;
+    private HashMap<String, Friend> friendHashMap;
 
     public static Me getInstance() {
         return ourInstance;
@@ -35,6 +38,7 @@ public class Me {
 
     private Me() {
         friends = new ArrayList<>();
+        friendHashMap = new HashMap<>();
     }
 
     private Profile profile = null;
@@ -50,11 +54,22 @@ public class Me {
 
     public void setFriends(JsonArray friendJson) {
         friends.clear();
+        friendHashMap.clear();
         for (int i = 0; i < friendJson.size(); i++) {
             JsonObject jsonObject = friendJson.get(i).getAsJsonObject();
             Friend friend = JsonUtil.deserialize(jsonObject, Friend.class);
             friends.add(friend);
+            friendHashMap.put(friend.getUuid(), friend);
         }
+        MapSocketIOUtil.getInstance().subscribeAll();
+    }
+
+    public HashMap<String, Friend> getFriendHashMap() {
+        return friendHashMap;
+    }
+
+    public void setFriendHashMap(HashMap<String, Friend> friendHashMap) {
+        this.friendHashMap = friendHashMap;
     }
 
     public void setGoogleProfile(GoogleSignInAccount acc) {
@@ -78,7 +93,9 @@ public class Me {
             @Override
             public void onSuccess(JsonObject response) {
                 String accessToken = response.get("accessToken").getAsString();
+                String uuid = response.get("uuid").getAsString();
                 Me.getInstance().profile.setAccessToken(accessToken);
+                Me.getInstance().profile.setUuid(uuid);
                 callback.onSuccess(response);
             }
 

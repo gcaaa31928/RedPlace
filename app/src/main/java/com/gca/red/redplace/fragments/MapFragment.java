@@ -15,8 +15,10 @@ import com.gca.red.redplace.R;
 import com.gca.red.redplace.adapters.MapFriendAdapter;
 import com.gca.red.redplace.helpers.GoogleMapHelper;
 import com.gca.red.redplace.helpers.GoogleMapHelperListener;
+import com.gca.red.redplace.utils.MapSocketIOUtil;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.orhanobut.logger.Logger;
 
 import permissions.dispatcher.NeedsPermission;
@@ -50,6 +52,8 @@ public class MapFragment extends Fragment implements GoogleMapHelperListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        MapSocketIOUtil.getInstance().instanceSocket("http://140.124.183.101:3000");
+        MapSocketIOUtil.getInstance().connect();
         mapView = (MapView) getView().findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         googleMapHelper = new GoogleMapHelper(getChildFragmentManager(), getActivity(), getContext(), mapView, this);
