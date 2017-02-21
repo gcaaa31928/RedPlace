@@ -52,7 +52,7 @@ public class MapFragment extends Fragment implements GoogleMapHelperListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        MapSocketIOUtil.getInstance().instanceSocket("http://140.124.183.101:3000");
+        MapSocketIOUtil.getInstance().instanceSocket(getContext().getString(R.string.server_address));
         MapSocketIOUtil.getInstance().connect();
         mapView = (MapView) getView().findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);

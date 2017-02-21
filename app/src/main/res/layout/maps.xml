@@ -32,7 +32,7 @@
         android:id="@+id/dragView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@drawable/border"
+        android:background="@color/colorBackground"
         android:clickable="true"
         android:focusable="false"
         android:orientation="vertical">
